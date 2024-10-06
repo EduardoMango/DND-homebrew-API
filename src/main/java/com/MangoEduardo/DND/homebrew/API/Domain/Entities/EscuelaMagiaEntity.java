@@ -19,6 +19,7 @@ public class EscuelaMagiaEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_escuela;
     private String nombre_escuela;
+    @Lob
     private String descripcion_escuela;
 
     @OneToMany(mappedBy = "escuelaMagia", cascade = CascadeType.ALL)

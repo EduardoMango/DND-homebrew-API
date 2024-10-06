@@ -1,10 +1,13 @@
 package com.MangoEduardo.DND.homebrew.API.Controllers;
 
+import com.MangoEduardo.DND.homebrew.API.Config.Views;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IEscuelaMagiaService;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -36,23 +39,32 @@ public class EscuelaMagiaController {
     }
 
     @GetMapping
+    @JsonView(Views.Public.class)
     public ResponseEntity<PagedModel<EntityModel<EscuelaMagiaDTO>>> getEscuelasMagia(Pageable pageable) {
         Page<EscuelaMagiaEntity> page = escuelaMagiaService.findAll(pageable);
+
+        if (page.isEmpty()) {
+            return ResponseEntity.noContent().build(); // Devuelve 204 No Content si no hay resultados
+        }
+
         PagedModel<EntityModel<EscuelaMagiaDTO>> pagedModel = pagedResourcesAssembler.toModel(page.map(escuelaMagiaMapper::mapTo));
+
         return ResponseEntity.ok(pagedModel);
     }
 
     @GetMapping("/{id_escuela}")
+    @JsonView(Views.Public.class)
     public ResponseEntity<EscuelaMagiaDTO> getEscuelaMagiaById(@PathVariable("id_escuela") Integer id_escuela) {
         Optional<EscuelaMagiaEntity> foundEntity = escuelaMagiaService.findById(id_escuela);
 
         return foundEntity.map(escuelaMagiaEntity -> { //Utiliza un lambda.
-            EscuelaMagiaDTO escuelaMagiaDTO = escuelaMagiaMapper.mapTo(escuelaMagiaEntity); //Pasa el autor obtenido a un autor Dto. Si no se puede porque es empty, devuelve el response "NOT FOUND"
+            EscuelaMagiaDTO escuelaMagiaDTO = escuelaMagiaMapper.mapTo(escuelaMagiaEntity);
             return new ResponseEntity<>(escuelaMagiaDTO,HttpStatus.OK);
         }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/{id_escuela}/hechizos")
+    @JsonView(Views.Public.class)
     public ResponseEntity<PagedModel<EntityModel<HechizoDTO>>>getHechizosByEscuelaID(@PathVariable("id_escuela") Integer id_escuela, Pageable pageable){
         Optional<EscuelaMagiaEntity> foundEntity = escuelaMagiaService.findById(id_escuela);
 

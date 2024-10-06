@@ -46,7 +46,10 @@ public class HechizoServiceImpl implements IHechizoService {
 
         return hechizoRepository.findById(id).map(hechizoExistente -> {
             // Actualiza solo los campos que no son nulos
-            if(hechizoEntity.getNombre_hechizo() != null){
+            if (hechizoEntity.getId_hechizo() != null) {
+                hechizoExistente.setId_hechizo(hechizoEntity.getId_hechizo());
+            }
+            if (hechizoEntity.getNombre_hechizo() != null) {
                 hechizoExistente.setNombre_hechizo(hechizoEntity.getNombre_hechizo());
             }
             if (hechizoEntity.getNivel_hechizo() != null) {
@@ -54,30 +57,67 @@ public class HechizoServiceImpl implements IHechizoService {
             }
             if (hechizoEntity.getDescripcion_hechizo() != null) {
                 hechizoExistente.setDescripcion_hechizo(hechizoEntity.getDescripcion_hechizo());
-            } //Repetir por cada atributo
-            if (hechizoEntity.getNiveles_mayores()!=null) {
+            }
+            if (hechizoEntity.getNiveles_mayores() != null) {
                 hechizoExistente.setNiveles_mayores(hechizoEntity.getNiveles_mayores());
             }
             if (hechizoEntity.getTiempo_casteo() != null) {
                 hechizoExistente.setTiempo_casteo(hechizoEntity.getTiempo_casteo());
             }
-            if (hechizoEntity.getDuracionHechizo() != null) {
-                hechizoExistente.setDuracionHechizo(hechizoEntity.getDuracionHechizo());
+            if (hechizoEntity.getDuracion_Hechizo() != null) {
+                hechizoExistente.setDuracion_Hechizo(hechizoEntity.getDuracion_Hechizo());
             }
-            if (hechizoEntity.getRango_area() != null){
-                hechizoExistente.setRango_area(hechizoEntity.getRango_area());
+            if (hechizoEntity.getRango_texto() != null) {
+                hechizoExistente.setRango_texto(hechizoEntity.getRango_texto());
             }
-            if (hechizoEntity.getComponentes()!=null){
-                hechizoExistente.setComponentes(hechizoEntity.getComponentes());
+            if (hechizoEntity.getRango() != null) {
+                hechizoExistente.setRango(hechizoEntity.getRango());
             }
-            if (hechizoEntity.getAtaque_salvacion()!=null){
-                hechizoExistente.setAtaque_salvacion(hechizoEntity.getAtaque_salvacion());
+            if (hechizoEntity.getArea() != null) {
+                hechizoExistente.setArea(hechizoEntity.getArea());
             }
-            if (hechizoEntity.getDamage_efecto()!=null){
-                hechizoExistente.setDamage_efecto(hechizoEntity.getDamage_efecto());
+            if (hechizoEntity.getTipo_objetivo() != null) {
+                hechizoExistente.setTipo_objetivo(hechizoEntity.getTipo_objetivo());
             }
-            if (hechizoEntity.getEs_ritual()!=null){
+            if (hechizoEntity.isVerbal()) {
+                hechizoExistente.setVerbal(hechizoEntity.isVerbal());
+            }
+            if (hechizoEntity.isSomantico()) {
+                hechizoExistente.setSomantico(hechizoEntity.isSomantico());
+            }
+            if (hechizoEntity.isMaterial()) {
+                hechizoExistente.setMaterial(hechizoEntity.isMaterial());
+            }
+            if (hechizoEntity.getMaterial_requerido() != null) {
+                hechizoExistente.setMaterial_requerido(hechizoEntity.getMaterial_requerido());
+            }
+            if (hechizoEntity.getMaterial_costo() != null) {
+                hechizoExistente.setMaterial_costo(hechizoEntity.getMaterial_costo());
+            }
+            if (hechizoEntity.isConcentracion()) {
+                hechizoExistente.setConcentracion(hechizoEntity.isConcentracion());
+            }
+            if (hechizoEntity.isTirada_salvacion()) {
+                hechizoExistente.setTirada_salvacion(hechizoEntity.isTirada_salvacion());
+            }
+            if (hechizoEntity.getHabilidad_tirada_salvacion() != null) {
+                hechizoExistente.setHabilidad_tirada_salvacion(hechizoEntity.getHabilidad_tirada_salvacion());
+            }
+            if (hechizoEntity.isAtaque()) {
+                hechizoExistente.setAtaque(hechizoEntity.isAtaque());
+            }
+            if (hechizoEntity.getDanio() != null) {
+                hechizoExistente.setDanio(hechizoEntity.getDanio());
+            }
+            if (hechizoEntity.getDanio_Tipo() != null) {
+                hechizoExistente.setDanio_Tipo(hechizoEntity.getDanio_Tipo());
+            }
+            if (hechizoEntity.getEs_ritual() != null) {
                 hechizoExistente.setEs_ritual(hechizoEntity.getEs_ritual());
+            }
+            // Aquí puedes agregar el manejo para la escuela de magia si es necesario
+            if (hechizoEntity.getEscuelaMagia() != null) {
+                hechizoExistente.setEscuelaMagia(hechizoEntity.getEscuelaMagia());
             }
             return hechizoRepository.save(hechizoExistente);
         }).orElseThrow(() -> new EntityNotFoundException("La escuela ingresada no existe"));

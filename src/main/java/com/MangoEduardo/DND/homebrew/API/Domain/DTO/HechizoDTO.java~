@@ -1,7 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
 
-import com.MangoEduardo.DND.homebrew.API.Config.Views;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,76 +12,29 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HechizoDTO {
 
-    @JsonView(Views.Public.class)
     private Integer id_hechizo;
-
-    @JsonView(Views.Public.class)
     private String nombre_hechizo;
-
-    @JsonView(Views.Public.class)
     private Integer nivel_hechizo;
-
-    @JsonView(Views.Public.class)
     private String descripcion_hechizo;
-
-    @JsonView(Views.Public.class)
     private String niveles_mayores;
-
-    @JsonView(Views.Public.class)
     private String tiempo_casteo;
-
-    @JsonView(Views.Public.class)
     private String duracion_Hechizo;
-
-    @JsonView(Views.Public.class)
     private String rango_texto;
-
-    @JsonView(Views.Public.class)
     private Integer rango;
-
-    @JsonView(Views.Public.class)
     private String area;
-
-    @JsonView(Views.Public.class)
     private String tipo_objetivo;
-
-    @JsonView(Views.Public.class)
     private boolean verbal;
-
-    @JsonView(Views.Public.class)
     private boolean somantico;
-
-    @JsonView(Views.Public.class)
     private boolean material;
-
-    @JsonView(Views.Public.class)
     private String material_requerido;
-
-    @JsonView(Views.Public.class)
     private String material_costo;
-
-    @JsonView(Views.Public.class)
     private boolean concentracion;
-
-    @JsonView(Views.Public.class)
     private boolean tirada_salvacion;
-
-    @JsonView(Views.Public.class)
     private String habilidad_tirada_salvacion;
-
-    @JsonView(Views.Public.class)
     private boolean ataque;
-
-    @JsonView(Views.Public.class)
     private String danio;
-
-    @JsonView(Views.Public.class)
     private String danio_Tipo;
-
-    @JsonView(Views.Public.class)
     private Boolean es_ritual;
 
-    @JsonView(Views.Internal.class)
     private EscuelaMagiaSinHechizosDTO escuelaMagia;
-
 }

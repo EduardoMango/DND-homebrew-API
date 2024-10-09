@@ -60,19 +60,16 @@ public class HechizoController {
     public ResponseEntity<HechizoDTO> getHechizoById(@PathVariable("id_hechizo") Integer id_hechizo) {
         Optional<HechizoEntity> foundEntity = hechizoService.findById(id_hechizo);
 
-        if (foundEntity.isPresent()) {
-            HechizoEntity hechizoEntity = foundEntity.get();
 
-            // Verifica si está borrado
-            if (!hechizoEntity.getEstaBorrado()) {
-                // Si no está borrado, convierte a DTO y devuelve
-                HechizoDTO hechizoDTO = hechizoMapper.mapTo(hechizoEntity);
-                return new ResponseEntity<>(hechizoDTO, HttpStatus.OK);
-            }
+        if (foundEntity.isPresent() && foundEntity.get().getEstaBorrado()) {
+
+            // Si no está borrado, convierte a DTO y devuelve
+            HechizoDTO hechizoDTO = hechizoMapper.mapTo(foundEntity.get());
+            return new ResponseEntity<>(hechizoDTO, HttpStatus.OK);
+        } else {
+            // Si no se encuentra el hechizo, devuelve 404
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
-     //Si no se encuentra el hechizo o está borrado, devuelve 404
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @PostMapping

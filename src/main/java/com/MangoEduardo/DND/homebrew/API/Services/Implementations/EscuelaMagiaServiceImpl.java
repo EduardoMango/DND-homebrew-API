@@ -1,6 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Implementations;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Repositories.EscuelaMagiaRepository;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IEscuelaMagiaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -60,4 +61,6 @@ public class EscuelaMagiaServiceImpl implements IEscuelaMagiaService {
     public void delete(Integer id) {
         escuelaMagiaRepository.deleteById(id);
     }
+
+
 }

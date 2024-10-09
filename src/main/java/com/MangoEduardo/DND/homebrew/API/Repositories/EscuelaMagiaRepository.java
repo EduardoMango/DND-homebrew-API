@@ -6,6 +6,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EscuelaMagiaRepository extends CrudRepository<EscuelaMagiaEntity, Integer>
-        , PagingAndSortingRepository<EscuelaMagiaEntity, Integer> {
+public interface EscuelaMagiaRepository extends CrudRepository<EscuelaMagiaEntity, Integer>, PagingAndSortingRepository<EscuelaMagiaEntity, Integer> {
+
 }

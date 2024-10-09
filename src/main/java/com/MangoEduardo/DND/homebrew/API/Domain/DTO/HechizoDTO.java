@@ -17,7 +17,7 @@ public class HechizoDTO {
     private Integer id_hechizo;
 
     @JsonView(Views.Public.class)
-    private String nombre_hechizo;
+    private String nombreHechizo;
 
     @JsonView(Views.Public.class)
     private Integer nivel_hechizo;

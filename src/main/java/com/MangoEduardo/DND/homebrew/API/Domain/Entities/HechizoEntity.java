@@ -1,5 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,7 +16,7 @@ public class HechizoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_hechizo;
-    private String nombre_hechizo;
+    private String nombreHechizo;
     private Integer nivel_hechizo;
     @Lob
     private String descripcion_hechizo;
@@ -39,9 +40,14 @@ public class HechizoEntity {
     private String danio_Tipo;
     private Boolean es_ritual;
 
+    private Boolean estaBorrado;
 
     @ManyToOne
     @JoinColumn(name = "id_escuela")
     private EscuelaMagiaEntity escuelaMagia;
 
+    @PrePersist
+    public void prePersist() {
+        estaBorrado = false;
+    }
 }

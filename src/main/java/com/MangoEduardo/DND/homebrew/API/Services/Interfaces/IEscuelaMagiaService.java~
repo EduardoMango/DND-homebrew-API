@@ -21,4 +21,5 @@ public interface IEscuelaMagiaService {
     EscuelaMagiaEntity update(Integer id,EscuelaMagiaEntity escuelaMagiaEntity);
     void delete(Integer id);
 
+    Page<HechizoEntity> findHechizosByEscuelaId(Integer idEscuela, Pageable pageable)>
 }

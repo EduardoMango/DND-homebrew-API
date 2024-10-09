@@ -29,6 +29,10 @@ public class HechizoServiceImpl implements IHechizoService {
         return hechizoRepository.findById(id);
     }
 
+    public Page<HechizoEntity> findByNombreHechizo(String nombre_hechizo, Pageable pageable) {
+        return hechizoRepository.findByNombreHechizoContainingIgnoreCase(nombre_hechizo, pageable);
+    }
+
     @Override
     public HechizoEntity save(HechizoEntity hechizoEntity) {
         return hechizoRepository.save(hechizoEntity);
@@ -49,8 +53,8 @@ public class HechizoServiceImpl implements IHechizoService {
             if (hechizoEntity.getId_hechizo() != null) {
                 hechizoExistente.setId_hechizo(hechizoEntity.getId_hechizo());
             }
-            if (hechizoEntity.getNombre_hechizo() != null) {
-                hechizoExistente.setNombre_hechizo(hechizoEntity.getNombre_hechizo());
+            if (hechizoEntity.getNombreHechizo() != null) {
+                hechizoExistente.setNombreHechizo(hechizoEntity.getNombreHechizo());
             }
             if (hechizoEntity.getNivel_hechizo() != null) {
                 hechizoExistente.setNivel_hechizo(hechizoEntity.getNivel_hechizo());
@@ -127,5 +131,10 @@ public class HechizoServiceImpl implements IHechizoService {
     @Override
     public void delete(Integer id) {
         hechizoRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<HechizoEntity> findHechizosByEscuelaId(Integer idEscuela, Pageable pageable) {
+        return hechizoRepository.findHechizosByEscuelaId(idEscuela, pageable);
     }
 }

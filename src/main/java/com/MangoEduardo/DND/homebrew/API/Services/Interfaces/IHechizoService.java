@@ -14,6 +14,9 @@ public interface IHechizoService {
     //Busca un hechizo por ID y devuelve un optional
     Optional<HechizoEntity> findById(Integer id);
 
+    //Busca un hechizo por nombre y devuelve un page
+    Page<HechizoEntity> findByNombreHechizo(String nombre_hechizo, Pageable pageable);
+
     //Guarda un hechizo recibido en la base de datos y lo devuelve
     HechizoEntity save(HechizoEntity hechizoEntity);
 
@@ -25,4 +28,6 @@ public interface IHechizoService {
 
     //Elimina un hechizo por ID
     void delete(Integer id);
+
+    Page<HechizoEntity> findHechizosByEscuelaId(Integer idEscuela, Pageable pageable);
 }

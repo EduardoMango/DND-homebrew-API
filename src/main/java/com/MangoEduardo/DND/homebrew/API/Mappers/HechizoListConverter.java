@@ -24,7 +24,7 @@ public class HechizoListConverter extends AbstractConverter<List<HechizoEntity>,
 
                         return new HechizoDTO(
                                 hechizoEntity.getId_hechizo(),
-                                hechizoEntity.getNombre_hechizo(),
+                                hechizoEntity.getNombreHechizo(),
                                 hechizoEntity.getNivel_hechizo(),
                                 hechizoEntity.getDescripcion_hechizo(),
                                 hechizoEntity.getNiveles_mayores(),

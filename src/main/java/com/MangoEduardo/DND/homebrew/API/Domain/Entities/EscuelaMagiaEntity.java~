@@ -27,8 +27,4 @@ public class EscuelaMagiaEntity {
     @OneToMany(mappedBy = "escuelaMagia", cascade = CascadeType.ALL)
     private List<HechizoEntity> hechizos;
 
-    @PrePersist
-    public void prePersist() {
-        estaBorrado = false;
-    }
 }

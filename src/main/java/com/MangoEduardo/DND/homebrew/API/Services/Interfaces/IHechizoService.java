@@ -1,6 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Interfaces;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,7 @@ public interface IHechizoService {
     Page<HechizoEntity> findAll(Pageable pageable);
 
     //Busca un hechizo por ID y devuelve un optional
-    Optional<HechizoEntity> findById(Integer id);
+    Optional<HechizoEntity> findById(Long id);
 
     //Busca un hechizo por nombre y devuelve un page
     Page<HechizoEntity> findByNombreHechizo(String nombre_hechizo, Pageable pageable);
@@ -21,13 +22,17 @@ public interface IHechizoService {
     HechizoEntity save(HechizoEntity hechizoEntity);
 
     //Verifica por ID si un hechizo existe en la bd
-    boolean isExist(Integer id);
+    boolean isExist(Long id);
 
     //Actualiza parcialmente los datos de un hechizo
-    HechizoEntity update(Integer id, HechizoEntity hechizoEntity);
+    HechizoEntity update(Long id, HechizoEntity hechizoEntity);
 
     //Elimina un hechizo por ID
-    void delete(Integer id);
+    void delete(Long id);
 
-    Page<HechizoEntity> findHechizosByEscuelaId(Integer idEscuela, Pageable pageable);
+    Page<HechizoEntity> findHechizosByEscuelaId(Long idEscuela, Pageable pageable);
+
+    Page<HechizoEntity> findByNivelHechizo(Integer nivelHechizo, Pageable pageable);
+
+    Page<HechizoEntity> findByDamageTypes(DamageTypes damageTypes, Pageable pageable);
 }

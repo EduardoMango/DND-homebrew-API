@@ -13,6 +13,7 @@ public class HechizoMapperImpl implements IMapper<HechizoEntity, HechizoDTO> {
 
     public HechizoMapperImpl(ModelMapper modelMapper) {
         this.modelMapper = modelMapper;
+
     }
     @Override
     public HechizoDTO mapTo(HechizoEntity hechizoEntity) {

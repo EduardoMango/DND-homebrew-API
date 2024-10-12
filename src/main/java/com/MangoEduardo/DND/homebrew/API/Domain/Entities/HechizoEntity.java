@@ -1,23 +1,26 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.io.Serializable;
+import java.util.List;
+
 @Entity
 @Table(name = "hechizos")
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class HechizoEntity {
+public class HechizoEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_hechizo;
+    private Long id_hechizo;
     private String nombreHechizo;
-    private Integer nivel_hechizo;
+    private Integer nivelHechizo;
     @Lob
     private String descripcion_hechizo;
     private String niveles_mayores;
@@ -32,13 +35,15 @@ public class HechizoEntity {
     private boolean material;
     private String material_requerido;
     private String material_costo;
-    private boolean concentracion;
-    private boolean tirada_salvacion;
+    private boolean concentracion; //Filtrar?
+    private boolean tirada_salvacion; //Filtrar
     private String habilidad_tirada_salvacion;
-    private boolean ataque;
+    private boolean ataque; //Filtrar?
     private String danio;
-    private String danio_Tipo;
-    private Boolean es_ritual;
+    @ElementCollection
+    @Enumerated(EnumType.STRING)
+    private List<DamageTypes> damageTypes; 
+    private Boolean es_ritual; //Filtrar?
 
     private Boolean estaBorrado;
 

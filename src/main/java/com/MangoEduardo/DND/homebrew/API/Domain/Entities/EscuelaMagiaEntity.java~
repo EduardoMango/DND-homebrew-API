@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -13,12 +14,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EscuelaMagiaEntity {
+public class EscuelaMagiaEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_escuela;
-    private String nombre_escuela;
+    private Long id_escuela;
+    private String nombreEscuela;
     @Lob
     private String descripcion_escuela;
 
@@ -27,4 +28,8 @@ public class EscuelaMagiaEntity {
     @OneToMany(mappedBy = "escuelaMagia", cascade = CascadeType.ALL)
     private List<HechizoEntity> hechizos;
 
+    @PrePersist
+    public void prePersist() {
+        estaBorrado = false;
+    }
 }

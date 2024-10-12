@@ -1,10 +1,10 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Implementations;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Repositories.EscuelaMagiaRepository;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IEscuelaMagiaService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ public class EscuelaMagiaServiceImpl implements IEscuelaMagiaService {
     }
 
     @Override
-    public Optional<EscuelaMagiaEntity> findById(Integer id) {
+    public Optional<EscuelaMagiaEntity> findById(Long id) {
         return escuelaMagiaRepository.findById(id);
     }
 
@@ -37,18 +37,18 @@ public class EscuelaMagiaServiceImpl implements IEscuelaMagiaService {
     }
 
     @Override
-    public boolean isExist(Integer id) {
+    public boolean isExist(Long id) {
         return escuelaMagiaRepository.existsById(id);
     }
 
     @Override
-    public EscuelaMagiaEntity update(Integer id, EscuelaMagiaEntity escuelaMagiaEntity) {
+    public EscuelaMagiaEntity update(Long id, EscuelaMagiaEntity escuelaMagiaEntity) {
         escuelaMagiaEntity.setId_escuela(id);
 
         return escuelaMagiaRepository.findById(id).map(escuelaMagiaExistente -> {
             // Actualiza solo los campos que no son nulos
-            if (escuelaMagiaEntity.getNombre_escuela() != null) {
-                escuelaMagiaExistente.setNombre_escuela(escuelaMagiaEntity.getNombre_escuela());
+            if (escuelaMagiaEntity.getNombreEscuela() != null) {
+                escuelaMagiaExistente.setNombreEscuela(escuelaMagiaEntity.getNombreEscuela());
             }
             if (escuelaMagiaEntity.getDescripcion_escuela() != null) {
                 escuelaMagiaExistente.setDescripcion_escuela(escuelaMagiaEntity.getDescripcion_escuela());
@@ -58,9 +58,12 @@ public class EscuelaMagiaServiceImpl implements IEscuelaMagiaService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         escuelaMagiaRepository.deleteById(id);
     }
 
-
+    @Override
+    public Page<EscuelaMagiaEntity> findByNombreEscuela(String nombreEscuela, Pageable pageable) {
+        return escuelaMagiaRepository.findByNombreEscuelaContainingIgnoreCase(nombreEscuela, pageable);
+    }
 }

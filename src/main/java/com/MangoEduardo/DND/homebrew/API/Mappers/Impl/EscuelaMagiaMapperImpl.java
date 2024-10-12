@@ -3,9 +3,11 @@ package com.MangoEduardo.DND.homebrew.API.Mappers.Impl;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.HechizoListConverter;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.modelmapper.TypeToken;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Component;
@@ -21,7 +23,9 @@ public class EscuelaMagiaMapperImpl implements IMapper<EscuelaMagiaEntity, Escue
         this.modelMapper = modelMapper;
 
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-        modelMapper.addConverter(new HechizoListConverter());
+        //TypeMap<List<HechizoEntity>, List<HechizoDTO>> hechizoTypeMap = modelMapper.createTypeMap();
+        //hechizoTypeMap.setConverter(new HechizoListConverter());
+        //Como convertir lista de hechizos a DTO dentro de escuelamagia
     }
 
     @Override

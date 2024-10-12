@@ -1,26 +1,29 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
 
 import com.MangoEduardo.DND.homebrew.API.Config.Views;
+import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+import java.io.Serializable;
+import java.util.List;
+
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class HechizoDTO {
+public class HechizoDTO implements Serializable {
 
     @JsonView(Views.Public.class)
-    private Integer id_hechizo;
+    private Long id_hechizo;
 
     @JsonView(Views.Public.class)
     private String nombreHechizo;
 
     @JsonView(Views.Public.class)
-    private Integer nivel_hechizo;
+    private Integer nivelHechizo;
 
     @JsonView(Views.Public.class)
     private String descripcion_hechizo;
@@ -77,12 +80,12 @@ public class HechizoDTO {
     private String danio;
 
     @JsonView(Views.Public.class)
-    private String danio_Tipo;
+    @JsonFormat(with = JsonFormat.Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+    private List<DamageTypes> damageTypes;
 
     @JsonView(Views.Public.class)
     private Boolean es_ritual;
 
     @JsonView(Views.Internal.class)
     private EscuelaMagiaSinHechizosDTO escuelaMagia;
-
 }

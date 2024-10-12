@@ -2,6 +2,8 @@ package com.MangoEduardo.DND.homebrew.API.Controllers;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
+import com.MangoEduardo.DND.homebrew.API.Exceptions.HechizoNotFoundException;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
 import org.springframework.data.domain.Page;
@@ -34,13 +36,19 @@ public class HechizoController {
 
     @GetMapping
     public ResponseEntity<PagedModel<EntityModel<HechizoDTO>>> getHechizos(
-            @RequestParam(name = "nombre_hechizo", required = false) String nombre_hechizo,
+            @RequestParam(name = "nombreHechizo", required = false) String nombreHechizo,
+            @RequestParam(name = "nivelHechizo", required = false) Integer nivelHechizo,
+            @RequestParam(name = "damageType", required = false) String damageType,
             Pageable pageable) {
 
         Page<HechizoEntity> page;
 
-        if (nombre_hechizo != null && !nombre_hechizo.isEmpty()) {
-            page = hechizoService.findByNombreHechizo(nombre_hechizo, pageable);
+        if (nombreHechizo != null && !nombreHechizo.isEmpty()) {
+            page = hechizoService.findByNombreHechizo(nombreHechizo, pageable);
+        }else if(nivelHechizo != null) {
+            page = hechizoService.findByNivelHechizo(nivelHechizo, pageable);
+        } else if (damageType != null && !damageType.isEmpty()) {
+            page = hechizoService.findByDamageTypes(Enum.valueOf(DamageTypes.class, damageType.toUpperCase()), pageable);
         } else {
             page = hechizoService.findAll(pageable);
         }
@@ -57,7 +65,7 @@ public class HechizoController {
 
 
     @GetMapping("/{id_hechizo}")
-    public ResponseEntity<HechizoDTO> getHechizoById(@PathVariable("id_hechizo") Integer id_hechizo) {
+    public ResponseEntity<HechizoDTO> getHechizoById(@PathVariable("id_hechizo") Long id_hechizo) {
         Optional<HechizoEntity> foundEntity = hechizoService.findById(id_hechizo);
 
         if (foundEntity.isPresent()) {
@@ -72,11 +80,12 @@ public class HechizoController {
         }
 
      //Si no se encuentra el hechizo o está borrado, devuelve 404
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        throw new HechizoNotFoundException(id_hechizo);
     }
 
     @PostMapping
     public ResponseEntity<HechizoDTO> postHechizo(@RequestBody HechizoDTO hechizoDTO){
+
 
         HechizoEntity aGuardar = hechizoMapper.mapFrom(hechizoDTO);
         HechizoEntity saved = hechizoService.save(aGuardar);
@@ -85,9 +94,9 @@ public class HechizoController {
     }
 
     @PutMapping("/{id_hechizo}")
-    public ResponseEntity<HechizoDTO> putHechizo(@PathVariable Integer id_hechizo, @RequestBody HechizoDTO hechizoDTO){
+    public ResponseEntity<HechizoDTO> putHechizo(@PathVariable Long id_hechizo, @RequestBody HechizoDTO hechizoDTO){
         if(!hechizoService.isExist(id_hechizo)){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new HechizoNotFoundException(id_hechizo);
         }
         hechizoDTO.setId_hechizo(id_hechizo);
 
@@ -98,18 +107,18 @@ public class HechizoController {
     }
 
     @PatchMapping("/{id_hechizo}")
-    public ResponseEntity<HechizoDTO> patchHechizo(@PathVariable("id_hechizo") Integer id_hechizo, @RequestBody HechizoDTO hechizo) {
+    public ResponseEntity<HechizoDTO> patchHechizo(@PathVariable("id_hechizo") Long id_hechizo, @RequestBody HechizoDTO hechizo) {
         if (!hechizoService.isExist(id_hechizo)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new HechizoNotFoundException(id_hechizo);
         }
         HechizoEntity hechizoActualizada = hechizoService.update(id_hechizo,hechizoMapper.mapFrom(hechizo));
         return new ResponseEntity<>(hechizoMapper.mapTo(hechizoActualizada),HttpStatus.OK);
     }
 
     @DeleteMapping("/{id_hechizo}")
-    public ResponseEntity<Void> deleteHechizo(@PathVariable("id_hechizo") Integer id_hechizo) {
+    public ResponseEntity<Void> deleteHechizo(@PathVariable("id_hechizo") Long id_hechizo) {
         if (!hechizoService.isExist(id_hechizo)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new HechizoNotFoundException(id_hechizo);
         }
         Optional<HechizoEntity> hechizo = hechizoService.findById(id_hechizo);
 

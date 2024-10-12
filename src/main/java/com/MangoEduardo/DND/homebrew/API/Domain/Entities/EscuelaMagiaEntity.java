@@ -1,24 +1,24 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "escuelas_magia")
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EscuelaMagiaEntity {
+public class EscuelaMagiaEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_escuela;
-    private String nombre_escuela;
+    private Long id_escuela;
+    private String nombreEscuela;
     @Lob
     private String descripcion_escuela;
 

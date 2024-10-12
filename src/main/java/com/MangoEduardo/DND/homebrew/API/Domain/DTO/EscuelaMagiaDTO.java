@@ -2,25 +2,24 @@ package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
 
 import com.MangoEduardo.DND.homebrew.API.Config.Views;
 import com.fasterxml.jackson.annotation.JsonView;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EscuelaMagiaDTO {
+public class EscuelaMagiaDTO implements Serializable {
 
     @JsonView(Views.Public.class)
-    private Integer id_escuela;
+    private Long id_escuela;
     @JsonView(Views.Public.class)
-    private String nombre_escuela;
+    private String nombreEscuela;
     @JsonView(Views.Public.class)
     private String descripcion_escuela;
-    @JsonView(Views.Public.class)
+    @JsonView(Views.Internal.class)
     private List<HechizoDTO> hechizos;
 }

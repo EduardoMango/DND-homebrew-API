@@ -1,6 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Implementations;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
 import com.MangoEduardo.DND.homebrew.API.Repositories.HechizoRepository;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +26,7 @@ public class HechizoServiceImpl implements IHechizoService {
     }
 
     @Override
-    public Optional<HechizoEntity> findById(Integer id) {
+    public Optional<HechizoEntity> findById(Long id) {
         return hechizoRepository.findById(id);
     }
 
@@ -39,12 +40,12 @@ public class HechizoServiceImpl implements IHechizoService {
     }
 
     @Override
-    public boolean isExist(Integer id) {
+    public boolean isExist(Long id) {
         return hechizoRepository.existsById(id);
     }
 
     @Override
-    public HechizoEntity update(Integer id, HechizoEntity hechizoEntity) {
+    public HechizoEntity update(Long id, HechizoEntity hechizoEntity) {
 
         hechizoEntity.setId_hechizo(id);
 
@@ -56,8 +57,8 @@ public class HechizoServiceImpl implements IHechizoService {
             if (hechizoEntity.getNombreHechizo() != null) {
                 hechizoExistente.setNombreHechizo(hechizoEntity.getNombreHechizo());
             }
-            if (hechizoEntity.getNivel_hechizo() != null) {
-                hechizoExistente.setNivel_hechizo(hechizoEntity.getNivel_hechizo());
+            if (hechizoEntity.getNivelHechizo() != null) {
+                hechizoExistente.setNivelHechizo(hechizoEntity.getNivelHechizo());
             }
             if (hechizoEntity.getDescripcion_hechizo() != null) {
                 hechizoExistente.setDescripcion_hechizo(hechizoEntity.getDescripcion_hechizo());
@@ -113,8 +114,8 @@ public class HechizoServiceImpl implements IHechizoService {
             if (hechizoEntity.getDanio() != null) {
                 hechizoExistente.setDanio(hechizoEntity.getDanio());
             }
-            if (hechizoEntity.getDanio_Tipo() != null) {
-                hechizoExistente.setDanio_Tipo(hechizoEntity.getDanio_Tipo());
+            if (hechizoEntity.getDamageTypes() != null) {
+                hechizoExistente.setDamageTypes(hechizoEntity.getDamageTypes());
             }
             if (hechizoEntity.getEs_ritual() != null) {
                 hechizoExistente.setEs_ritual(hechizoEntity.getEs_ritual());
@@ -129,12 +130,22 @@ public class HechizoServiceImpl implements IHechizoService {
     }
 
     @Override
-    public void delete(Integer id) {
+    public void delete(Long id) {
         hechizoRepository.deleteById(id);
     }
 
     @Override
-    public Page<HechizoEntity> findHechizosByEscuelaId(Integer idEscuela, Pageable pageable) {
+    public Page<HechizoEntity> findHechizosByEscuelaId(Long idEscuela, Pageable pageable) {
         return hechizoRepository.findHechizosByEscuelaId(idEscuela, pageable);
+    }
+
+    @Override
+    public Page<HechizoEntity> findByNivelHechizo(Integer nivelHechizo, Pageable pageable) {
+        return hechizoRepository.findByNivelHechizo(nivelHechizo, pageable);
+    }
+
+    @Override
+    public Page<HechizoEntity> findByDamageTypes(DamageTypes damageTypes, Pageable pageable) {
+        return hechizoRepository.findByDamageTypesContaining(damageTypes, pageable);
     }
 }

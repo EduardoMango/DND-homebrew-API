@@ -1,7 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Interfaces;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,13 +11,14 @@ public interface IEscuelaMagiaService {
 
     Page<EscuelaMagiaEntity> findAll(Pageable pageable);
 
-    Optional<EscuelaMagiaEntity> findById(Integer id);
+    Optional<EscuelaMagiaEntity> findById(Long id);
 
     EscuelaMagiaEntity save(EscuelaMagiaEntity escuelaMagiaEntity);
 
-    boolean isExist(Integer id);
+    boolean isExist(Long id);
 
-    EscuelaMagiaEntity update(Integer id,EscuelaMagiaEntity escuelaMagiaEntity);
-    void delete(Integer id);
+    EscuelaMagiaEntity update(Long id, EscuelaMagiaEntity escuelaMagiaEntity);
+    void delete(Long id);
 
+    Page<EscuelaMagiaEntity> findByNombreEscuela(String nombreEscuela, Pageable pageable);
 }

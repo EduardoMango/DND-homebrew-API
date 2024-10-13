@@ -20,5 +20,4 @@ public interface HechizoRepository extends JpaRepository<HechizoEntity, Long> {
 
     @Query("SELECT h FROM HechizoEntity h WHERE h.escuelaMagia.id_escuela = :id_escuela AND h.estaBorrado = false")
     Page<HechizoEntity> findHechizosByEscuelaId(@Param("id_escuela") Long idEscuela, Pageable pageable);
-
 }

@@ -15,5 +15,6 @@ public class EscuelaMagiaSinHechizosDTO implements Serializable {
     private Long id_escuela;
     private String nombreEscuela;
     private String descripcion_escuela;
+    private Boolean estaBorrado;
 
 }

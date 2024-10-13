@@ -3,8 +3,6 @@ package com.MangoEduardo.DND.homebrew.API.Mappers;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaSinHechizosDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
-import org.modelmapper.AbstractConverter;
 import org.modelmapper.spi.ConditionalConverter;
 import org.modelmapper.spi.MappingContext;
 
@@ -89,7 +87,8 @@ public class HechizoListConverter implements ConditionalConverter<List<HechizoEn
                                     new EscuelaMagiaSinHechizosDTO(
                                             hechizoEntity.getEscuelaMagia().getId_escuela(),
                                             hechizoEntity.getEscuelaMagia().getNombreEscuela(),
-                                            hechizoEntity.getEscuelaMagia().getDescripcion_escuela()
+                                            hechizoEntity.getEscuelaMagia().getDescripcion_escuela(),
+                                            hechizoEntity.getEscuelaMagia().getEstaBorrado()
                                     ) : null;
 
                             // Mapea HechizoEntity a HechizoDTO
@@ -111,12 +110,12 @@ public class HechizoListConverter implements ConditionalConverter<List<HechizoEn
                                     hechizoEntity.getMaterial_requerido(),
                                     hechizoEntity.getMaterial_costo(),
                                     hechizoEntity.isConcentracion(),
-                                    hechizoEntity.isTirada_salvacion(),
+                                    hechizoEntity.isTiradaSalvacion(),
                                     hechizoEntity.getHabilidad_tirada_salvacion(),
-                                    hechizoEntity.isAtaque(),
+                                    hechizoEntity.isEsAtaque(),
                                     hechizoEntity.getDanio(),
                                     hechizoEntity.getDamageTypes(),
-                                    hechizoEntity.getEs_ritual(),
+                                    hechizoEntity.getEsRitual(),
                                     escuelaMagiaDTO
                             );
                         })

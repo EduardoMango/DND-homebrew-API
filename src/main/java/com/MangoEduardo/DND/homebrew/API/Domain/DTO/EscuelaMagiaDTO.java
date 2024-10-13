@@ -20,6 +20,8 @@ public class EscuelaMagiaDTO implements Serializable {
     private String nombreEscuela;
     @JsonView(Views.Public.class)
     private String descripcion_escuela;
+    @JsonView(Views.Public.class)
+    private Boolean estaBorrado;
     @JsonView(Views.Internal.class)
     private List<HechizoDTO> hechizos;
 }

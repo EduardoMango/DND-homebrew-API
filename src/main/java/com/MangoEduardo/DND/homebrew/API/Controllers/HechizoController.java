@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -39,23 +40,26 @@ public class HechizoController {
             @RequestParam(name = "nombreHechizo", required = false) String nombreHechizo,
             @RequestParam(name = "nivelHechizo", required = false) Integer nivelHechizo,
             @RequestParam(name = "damageType", required = false) String damageType,
+            @RequestParam(name = "concentracion", required = false) Optional<Boolean> concentracion,
+            @RequestParam(name = "esAtaque", required = false) Optional<Boolean> esAtaque,
+            @RequestParam(name = "esRitual", required = false) Optional<Boolean> esRitual,
+            @RequestParam(name = "tiradaSalvacion", required = false) Optional<Boolean> tiradaSalvacion,
             Pageable pageable) {
 
-        Page<HechizoEntity> page;
+        Page<HechizoEntity> page = hechizoService.findAll(pageable);
 
-        if (nombreHechizo != null && !nombreHechizo.isEmpty()) {
-            page = hechizoService.findByNombreHechizo(nombreHechizo, pageable);
-        }else if(nivelHechizo != null) {
-            page = hechizoService.findByNivelHechizo(nivelHechizo, pageable);
-        } else if (damageType != null && !damageType.isEmpty()) {
-            page = hechizoService.findByDamageTypes(Enum.valueOf(DamageTypes.class, damageType.toUpperCase()), pageable);
-        } else {
-            page = hechizoService.findAll(pageable);
-        }
 
         // Filtrar los hechizos eliminados (getEstaBorrado() == false)
+        // y filtra por los demas params, para permitir multiples filtrados
         List<HechizoEntity> filteredList = page.getContent().stream()
                 .filter(hechizo -> !hechizo.getEstaBorrado())
+                .filter(hechizo -> nombreHechizo == null || nombreHechizo.isEmpty() || hechizo.getNombreHechizo().toLowerCase().contains(nombreHechizo.toLowerCase()))
+                .filter(hechizo -> nivelHechizo == null || Objects.equals(hechizo.getNivelHechizo(), nivelHechizo))
+                .filter(hechizo -> damageType == null || damageType.isEmpty() || hechizo.getDamageTypes().toString().toLowerCase().contains(damageType.toLowerCase()))
+                .filter(hechizo -> concentracion.isEmpty() || hechizo.isConcentracion() == concentracion.get())
+                .filter(hechizo -> esAtaque.isEmpty() || hechizo.isConcentracion() == esAtaque.get())
+                .filter(hechizo -> esRitual.isEmpty() || hechizo.isConcentracion() == esRitual.get())
+                .filter(hechizo -> tiradaSalvacion.isEmpty() || hechizo.isConcentracion() == tiradaSalvacion.get())
                 .toList();
 
         Page<HechizoEntity> pageFiltrada = new PageImpl<>(filteredList, pageable, page.getTotalElements());

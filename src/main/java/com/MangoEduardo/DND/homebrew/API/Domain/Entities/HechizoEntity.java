@@ -1,6 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,16 +36,15 @@ public class HechizoEntity implements Serializable {
     private boolean material;
     private String material_requerido;
     private String material_costo;
-    private boolean concentracion; //Filtrar?
-    private boolean tirada_salvacion; //Filtrar
+    private boolean concentracion;
+    private boolean tiradaSalvacion;
     private String habilidad_tirada_salvacion;
-    private boolean ataque; //Filtrar?
+    private boolean esAtaque;
     private String danio;
     @ElementCollection
     @Enumerated(EnumType.STRING)
-    private List<DamageTypes> damageTypes; 
-    private Boolean es_ritual; //Filtrar?
-
+    private List<DamageTypes> damageTypes;
+    private Boolean esRitual;
     private Boolean estaBorrado;
 
     @ManyToOne

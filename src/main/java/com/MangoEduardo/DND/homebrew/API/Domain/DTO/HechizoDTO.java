@@ -68,13 +68,13 @@ public class HechizoDTO implements Serializable {
     private boolean concentracion;
 
     @JsonView(Views.Public.class)
-    private boolean tirada_salvacion;
+    private boolean tiradaSalvacion;
 
     @JsonView(Views.Public.class)
     private String habilidad_tirada_salvacion;
 
     @JsonView(Views.Public.class)
-    private boolean ataque;
+    private boolean esAtaque;
 
     @JsonView(Views.Public.class)
     private String danio;
@@ -84,7 +84,7 @@ public class HechizoDTO implements Serializable {
     private List<DamageTypes> damageTypes;
 
     @JsonView(Views.Public.class)
-    private Boolean es_ritual;
+    private Boolean esRitual;
 
     @JsonView(Views.Internal.class)
     private EscuelaMagiaSinHechizosDTO escuelaMagia;

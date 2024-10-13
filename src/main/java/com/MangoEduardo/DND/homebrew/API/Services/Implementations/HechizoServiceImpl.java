@@ -102,14 +102,14 @@ public class HechizoServiceImpl implements IHechizoService {
             if (hechizoEntity.isConcentracion()) {
                 hechizoExistente.setConcentracion(hechizoEntity.isConcentracion());
             }
-            if (hechizoEntity.isTirada_salvacion()) {
-                hechizoExistente.setTirada_salvacion(hechizoEntity.isTirada_salvacion());
+            if (hechizoEntity.isTiradaSalvacion()) {
+                hechizoExistente.setTiradaSalvacion(hechizoEntity.isTiradaSalvacion());
             }
             if (hechizoEntity.getHabilidad_tirada_salvacion() != null) {
                 hechizoExistente.setHabilidad_tirada_salvacion(hechizoEntity.getHabilidad_tirada_salvacion());
             }
-            if (hechizoEntity.isAtaque()) {
-                hechizoExistente.setAtaque(hechizoEntity.isAtaque());
+            if (hechizoEntity.isEsAtaque()) {
+                hechizoExistente.setEsAtaque(hechizoEntity.isEsAtaque());
             }
             if (hechizoEntity.getDanio() != null) {
                 hechizoExistente.setDanio(hechizoEntity.getDanio());
@@ -117,8 +117,8 @@ public class HechizoServiceImpl implements IHechizoService {
             if (hechizoEntity.getDamageTypes() != null) {
                 hechizoExistente.setDamageTypes(hechizoEntity.getDamageTypes());
             }
-            if (hechizoEntity.getEs_ritual() != null) {
-                hechizoExistente.setEs_ritual(hechizoEntity.getEs_ritual());
+            if (hechizoEntity.getEsRitual() != null) {
+                hechizoExistente.setEsRitual(hechizoEntity.getEsRitual());
             }
             // Aquí puedes agregar el manejo para la escuela de magia si es necesario
             if (hechizoEntity.getEscuelaMagia() != null) {

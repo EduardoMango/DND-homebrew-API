@@ -27,9 +27,8 @@ public class EscuelaMagiaMapperImpl implements IMapper<EscuelaMagiaEntity, Escue
     public EscuelaMagiaDTO mapTo(EscuelaMagiaEntity escuelaMagiaEntity) {
         EscuelaMagiaDTO escuelaMagiaDTO =  modelMapper.map(escuelaMagiaEntity, EscuelaMagiaDTO.class);
 
-        if (escuelaMagiaEntity.getHechizos() != null){
-            escuelaMagiaDTO.setHechizos(modelMapper.map(escuelaMagiaEntity.getHechizos(), new TypeToken<List<HechizoDTO>>(){}.getType()));
-        }
+        System.out.println("Definiendo quien lanza la excepcion");
+        escuelaMagiaDTO.setHechizos(modelMapper.map(escuelaMagiaEntity.getHechizos(), new TypeToken<List<HechizoDTO>>(){}.getType()));
         return escuelaMagiaDTO;
     }
 

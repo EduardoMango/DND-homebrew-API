@@ -47,18 +47,15 @@ public class EscuelaMagiaController {
     @GetMapping
     @JsonView(Views.Public.class)
     public ResponseEntity<PagedModel<EntityModel<EscuelaMagiaDTO>>> getEscuelasMagia(
-            @RequestParam(name = "nombre", required = false) String nombre_escuela,
+            @RequestParam(name = "nombreEscuela", required = false) String nombreEscuela,
             Pageable pageable) {
 
-        Page<EscuelaMagiaEntity> page;
-        if(nombre_escuela != null && !nombre_escuela.isEmpty()){
-            page = escuelaMagiaService.findByNombreEscuela(nombre_escuela, pageable);
-        } else{
-            page = escuelaMagiaService.findAll(pageable);
-        }
+        Page<EscuelaMagiaEntity> page = escuelaMagiaService.findAll(pageable);
+
 
         List <EscuelaMagiaEntity> filteredList = page.getContent().stream()
-                .filter(escuela -> !escuela.getEstaBorrado())
+                .filter(escuela -> nombreEscuela == null ||  nombreEscuela.isEmpty() || escuela.getNombreEscuela().toLowerCase().contains(nombreEscuela.toLowerCase()))
+                .filter(escuela -> escuela.getEstaBorrado()!= null &&!escuela.getEstaBorrado())
                 .toList();
 
         Page<EscuelaMagiaEntity> pageFiltrada = new PageImpl<>(filteredList, pageable, page.getTotalElements());
@@ -91,7 +88,7 @@ public class EscuelaMagiaController {
         if (foundEntity.isPresent()){
 
             EscuelaMagiaEntity escuelaEncontrada = foundEntity.get();
-            if(!escuelaEncontrada.getEstaBorrado())
+            if(escuelaEncontrada.getEstaBorrado() != null &&!escuelaEncontrada.getEstaBorrado() )
             {
                 // Obtén los hechizos paginados directamente desde la base de datos
                 Page<HechizoEntity> hechizoPage = hechizoService.findHechizosByEscuelaId(id_escuela, pageable);
@@ -114,7 +111,8 @@ public class EscuelaMagiaController {
         EscuelaMagiaEntity aGuardar = escuelaMagiaMapper.mapFrom(escuela);
         EscuelaMagiaEntity savedEntity = escuelaMagiaService.save(aGuardar);
 
-            return new ResponseEntity<>(escuelaMagiaMapper.mapTo(savedEntity),HttpStatus.CREATED);
+        //Lanza excepcion IllegalArgumentExcepcion source cannot be null el mapTo.
+        return new ResponseEntity<>(escuelaMagiaMapper.mapTo(savedEntity),HttpStatus.CREATED);
     }
 
     @PutMapping("/{id_escuela}")

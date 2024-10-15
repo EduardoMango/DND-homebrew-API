@@ -1,7 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
 
 import com.MangoEduardo.DND.homebrew.API.Config.Views;
-import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
+import com.MangoEduardo.DND.homebrew.API.Domain.Enums.DamageTypes;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.*;

@@ -1,6 +1,4 @@
-package com.MangoEduardo.DND.homebrew.API.Domain.Models;
-
-import java.io.Serializable;
+package com.MangoEduardo.DND.homebrew.API.Domain.Enums;
 
 public enum DamageTypes {
     ACID,

@@ -1,4 +1,4 @@
-package com.MangoEduardo.DND.homebrew.API.Mappers;
+package com.MangoEduardo.DND.homebrew.API.Mappers.Converters;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaSinHechizosDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;

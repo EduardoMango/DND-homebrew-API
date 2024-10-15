@@ -1,7 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.MangoEduardo.DND.homebrew.API.Domain.Enums.DamageTypes;
 import jakarta.persistence.*;
 import lombok.*;
 

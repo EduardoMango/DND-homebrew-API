@@ -2,7 +2,6 @@ package com.MangoEduardo.DND.homebrew.API.Controllers;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Models.DamageTypes;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.HechizoNotFoundException;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;

@@ -1,42 +1,45 @@
 package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
 
+
 import com.MangoEduardo.DND.homebrew.API.Domain.Models.RasgoModel;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
-@Setter
+@Entity
+@Table(name = "subespecies")
+
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 
-@Entity
-@Table(name = "especies")
-public class EspecieEntity {
+public class SubEspecieEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idEspecie;
+    private Long idSubespecie;
 
-    private String nombreEspecie;
+    private String nombreSubespecie;
+
     @Lob
-    private String descripcionEspecie;
+    private String descripcionSubespecie;
+
     private Boolean estaBorrado;
 
     @ElementCollection
     @CollectionTable(
-            name="rasgos_especies",
-            joinColumns=@JoinColumn(name="id_especie")
+            name="rasgos_subespecies",
+            joinColumns=@JoinColumn(name="id_subespecie")
     )
     private List<RasgoModel> rasgos;
 
-
-    @OneToMany(mappedBy = "especie", cascade = CascadeType.ALL)
-    private List<SubEspecieEntity> subespecies;
+    @ManyToOne
+    @JoinColumn(name = "id_especie")
+    private EspecieEntity especie;
 
     @PrePersist
     public void prePersist() {

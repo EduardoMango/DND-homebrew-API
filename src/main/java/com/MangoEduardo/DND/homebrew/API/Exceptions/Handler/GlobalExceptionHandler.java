@@ -3,10 +3,11 @@ package com.MangoEduardo.DND.homebrew.API.Exceptions.Handler;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.EscuelaMagiaNotFoundException;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.EspecieNotFoundException;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.HechizoNotFoundException;
-import com.MangoEduardo.DND.homebrew.API.Exceptions.RasgoNotFoundException;
+import com.MangoEduardo.DND.homebrew.API.Exceptions.SubEspecieNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -55,17 +56,25 @@ public class GlobalExceptionHandler {
         errores.put("Error",e.getMessage());
         errores.put("Timestamp", LocalDateTime.now().toString());
 
-        return new ResponseEntity<>(errores,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errores,HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(RasgoNotFoundException.class)
-    public ResponseEntity<Map<String,String>> handleRasgoNotFoundException(RasgoNotFoundException e) {
+    @ExceptionHandler(SubEspecieNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleSubEspecieNotFoundException(SubEspecieNotFoundException e) {
         Map<String,String> errores = new HashMap<>();
 
         errores.put("Error",e.getMessage());
         errores.put("Timestamp", LocalDateTime.now().toString());
 
-        return new ResponseEntity<>(errores,HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errores,HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+                errors.put(error.getField(), error.getDefaultMessage()));
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
 }

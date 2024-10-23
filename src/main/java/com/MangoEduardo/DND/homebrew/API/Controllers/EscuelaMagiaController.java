@@ -10,6 +10,7 @@ import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IEscuelaMagiaService;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
 import com.fasterxml.jackson.annotation.JsonView;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +19,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +27,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/escuelasmagia")
+@Validated
 public class EscuelaMagiaController {
 
 
@@ -106,7 +109,7 @@ public class EscuelaMagiaController {
     }
 
     @PostMapping
-    public ResponseEntity<EscuelaMagiaDTO> postEscuelaMagia(@RequestBody EscuelaMagiaDTO escuela) {
+    public ResponseEntity<EscuelaMagiaDTO> postEscuelaMagia(@RequestBody @Valid EscuelaMagiaDTO escuela) {
 
         EscuelaMagiaEntity aGuardar = escuelaMagiaMapper.mapFrom(escuela);
         EscuelaMagiaEntity savedEntity = escuelaMagiaService.save(aGuardar);
@@ -116,7 +119,8 @@ public class EscuelaMagiaController {
     }
 
     @PutMapping("/{id_escuela}")
-    public ResponseEntity<EscuelaMagiaDTO> putEscuelaMagia(@PathVariable("id_escuela") Long id_escuela, @RequestBody EscuelaMagiaDTO escuela) {
+    public ResponseEntity<EscuelaMagiaDTO> putEscuelaMagia(@PathVariable("id_escuela") Long id_escuela,
+                                                           @RequestBody @Valid EscuelaMagiaDTO escuela) {
 
     if (!escuelaMagiaService.isExist(id_escuela)) {
         throw new EscuelaMagiaNotFoundException(id_escuela);
@@ -129,7 +133,8 @@ public class EscuelaMagiaController {
     }
 
     @PatchMapping("/{id_escuela}")
-    public ResponseEntity<EscuelaMagiaDTO> patchEscuelaMagia(@PathVariable("id_escuela") Long id_escuela, @RequestBody EscuelaMagiaDTO escuela) {
+    public ResponseEntity<EscuelaMagiaDTO> patchEscuelaMagia(@PathVariable("id_escuela") Long id_escuela,
+                                                             @RequestBody @Valid EscuelaMagiaDTO escuela) {
 
         if (!escuelaMagiaService.isExist(id_escuela)) {
             throw new EscuelaMagiaNotFoundException(id_escuela);

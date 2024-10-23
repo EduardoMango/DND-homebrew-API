@@ -5,6 +5,7 @@ import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.HechizoNotFoundException;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/hechizos")
+@Validated
 public class HechizoController {
 
     private final IHechizoService hechizoService;
@@ -87,7 +90,7 @@ public class HechizoController {
     }
 
     @PostMapping
-    public ResponseEntity<HechizoDTO> postHechizo(@RequestBody HechizoDTO hechizoDTO){
+    public ResponseEntity<HechizoDTO> postHechizo(@RequestBody @Valid HechizoDTO hechizoDTO){
 
 
         HechizoEntity aGuardar = hechizoMapper.mapFrom(hechizoDTO);
@@ -97,7 +100,7 @@ public class HechizoController {
     }
 
     @PutMapping("/{id_hechizo}")
-    public ResponseEntity<HechizoDTO> putHechizo(@PathVariable Long id_hechizo, @RequestBody HechizoDTO hechizoDTO){
+    public ResponseEntity<HechizoDTO> putHechizo(@PathVariable Long id_hechizo, @RequestBody @Valid HechizoDTO hechizoDTO){
         if(!hechizoService.isExist(id_hechizo)){
             throw new HechizoNotFoundException(id_hechizo);
         }
@@ -110,7 +113,7 @@ public class HechizoController {
     }
 
     @PatchMapping("/{id_hechizo}")
-    public ResponseEntity<HechizoDTO> patchHechizo(@PathVariable("id_hechizo") Long id_hechizo, @RequestBody HechizoDTO hechizo) {
+    public ResponseEntity<HechizoDTO> patchHechizo(@PathVariable("id_hechizo") Long id_hechizo, @RequestBody @Valid HechizoDTO hechizo) {
         if (!hechizoService.isExist(id_hechizo)) {
             throw new HechizoNotFoundException(id_hechizo);
         }

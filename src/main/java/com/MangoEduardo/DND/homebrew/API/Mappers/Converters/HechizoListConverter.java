@@ -87,8 +87,7 @@ public class HechizoListConverter implements ConditionalConverter<List<HechizoEn
                                     new EscuelaMagiaSinHechizosDTO(
                                             hechizoEntity.getEscuelaMagia().getId_escuela(),
                                             hechizoEntity.getEscuelaMagia().getNombreEscuela(),
-                                            hechizoEntity.getEscuelaMagia().getDescripcion_escuela(),
-                                            hechizoEntity.getEscuelaMagia().getEstaBorrado()
+                                            hechizoEntity.getEscuelaMagia().getDescripcion_escuela()
                                     ) : null;
 
                             // Mapea HechizoEntity a HechizoDTO

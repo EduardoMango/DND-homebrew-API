@@ -10,4 +10,5 @@ public class 	DndHomebrewApiApplication {
 		SpringApplication.run(DndHomebrewApiApplication.class, args);
 	}
 
+	//MOVER LOGICA DE MAPEO DE CONTROLLER A SERVICE. QUE LOS CONTROLLER SOLO UTILICEN DTO NO ENTITY
 }

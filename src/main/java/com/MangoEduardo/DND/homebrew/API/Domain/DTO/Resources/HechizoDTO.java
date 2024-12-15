@@ -1,4 +1,4 @@
-package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
+package com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources;
 
 import com.MangoEduardo.DND.homebrew.API.Config.Views;
 import com.MangoEduardo.DND.homebrew.API.Domain.Enums.DamageTypes;
@@ -101,7 +101,7 @@ public class HechizoDTO implements Serializable {
 
     @JsonView(Views.Public.class)
     @NotNull(message = "El campo esRitual no puede ser nulo")
-    private Boolean esRitual;
+    private boolean esRitual;
 
     @JsonView(Views.Internal.class)
     @NotNull(message = "El campo escuelaMagia no puede ser nulo")

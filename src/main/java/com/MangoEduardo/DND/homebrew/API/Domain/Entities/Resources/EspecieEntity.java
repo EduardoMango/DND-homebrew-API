@@ -1,9 +1,7 @@
-package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
+package com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Models.RasgoModel;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;

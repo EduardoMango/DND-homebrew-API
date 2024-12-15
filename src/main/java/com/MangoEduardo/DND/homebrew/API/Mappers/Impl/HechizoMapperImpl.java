@@ -1,7 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Mappers.Impl;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.HechizoDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

@@ -1,12 +1,9 @@
 package com.MangoEduardo.DND.homebrew.API.Controllers;
 
 import com.MangoEduardo.DND.homebrew.API.Config.Views;
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EscuelaMagiaDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.HechizoDTO;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.EscuelaMagiaNotFoundException;
-import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IEscuelaMagiaService;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -23,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/escuelasmagia")
@@ -33,17 +29,13 @@ public class EscuelaMagiaController {
 
     private final IEscuelaMagiaService escuelaMagiaService;
     private final IHechizoService hechizoService;
-    private final IMapper<EscuelaMagiaEntity, EscuelaMagiaDTO>   escuelaMagiaMapper;
-    private final IMapper<HechizoEntity, HechizoDTO> hechizoMapper;
     private final PagedResourcesAssembler<EscuelaMagiaDTO> pagedResourcesAssembler;
     private final PagedResourcesAssembler<HechizoDTO> pagedResourcesAssemblerHechizos;
 
-    public EscuelaMagiaController(IEscuelaMagiaService escuelaMagiaService, IHechizoService hechizoService, IMapper<HechizoEntity, HechizoDTO> hechizoMapper, PagedResourcesAssembler<EscuelaMagiaDTO> pagedResourcesAssembler, IMapper<EscuelaMagiaEntity, EscuelaMagiaDTO> escuelaMagiaMapper, PagedResourcesAssembler<HechizoDTO> pagedResourcesAssemblerHechizos) {
+    public EscuelaMagiaController(IEscuelaMagiaService escuelaMagiaService, IHechizoService hechizoService,PagedResourcesAssembler<EscuelaMagiaDTO> pagedResourcesAssembler, PagedResourcesAssembler<HechizoDTO> pagedResourcesAssemblerHechizos) {
         this.escuelaMagiaService = escuelaMagiaService;
         this.hechizoService = hechizoService;
-        this.hechizoMapper = hechizoMapper;
         this.pagedResourcesAssembler = pagedResourcesAssembler;
-        this.escuelaMagiaMapper = escuelaMagiaMapper;
         this.pagedResourcesAssemblerHechizos = pagedResourcesAssemblerHechizos;
     }
 
@@ -53,16 +45,15 @@ public class EscuelaMagiaController {
             @RequestParam(name = "nombreEscuela", required = false) String nombreEscuela,
             Pageable pageable) {
 
-        Page<EscuelaMagiaEntity> page = escuelaMagiaService.findAll(pageable);
+        Page<EscuelaMagiaDTO> page = escuelaMagiaService.findAll(pageable);
 
 
-        List <EscuelaMagiaEntity> filteredList = page.getContent().stream()
+        List <EscuelaMagiaDTO> filteredList = page.getContent().stream()
                 .filter(escuela -> nombreEscuela == null ||  nombreEscuela.isEmpty() || escuela.getNombreEscuela().toLowerCase().contains(nombreEscuela.toLowerCase()))
-                .filter(escuela -> escuela.getEstaBorrado()!= null &&!escuela.getEstaBorrado())
                 .toList();
 
-        Page<EscuelaMagiaEntity> pageFiltrada = new PageImpl<>(filteredList, pageable, page.getTotalElements());
-        PagedModel<EntityModel<EscuelaMagiaDTO>> pagedModel = pagedResourcesAssembler.toModel(pageFiltrada.map(escuelaMagiaMapper::mapTo));
+        Page<EscuelaMagiaDTO> pageFiltrada = new PageImpl<>(filteredList, pageable, page.getTotalElements());
+        PagedModel<EntityModel<EscuelaMagiaDTO>> pagedModel = pagedResourcesAssembler.toModel(pageFiltrada);
 
         return ResponseEntity.ok(pagedModel);
     }
@@ -70,52 +61,29 @@ public class EscuelaMagiaController {
     @GetMapping("/{id_escuela}")
     @JsonView(Views.Public.class)
     public ResponseEntity<EscuelaMagiaDTO> getEscuelaMagiaById(@PathVariable("id_escuela") Long id_escuela) {
-        Optional<EscuelaMagiaEntity> foundEntity = escuelaMagiaService.findById(id_escuela);
-
-        if (foundEntity.isPresent()){
-            EscuelaMagiaEntity escuelaMagiaEntity = foundEntity.get();
-
-            if (!escuelaMagiaEntity.getEstaBorrado()){
-                EscuelaMagiaDTO dto = escuelaMagiaMapper.mapTo(escuelaMagiaEntity);
-                return new ResponseEntity<>(dto,HttpStatus.OK);
-            }
-        }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        EscuelaMagiaDTO found = escuelaMagiaService.findById(id_escuela);
+                return new ResponseEntity<>(found,HttpStatus.OK);
     }
 
     @GetMapping("/{id_escuela}/hechizos")
     @JsonView(Views.Internal.class)
     public ResponseEntity<PagedModel<EntityModel<HechizoDTO>>>getHechizosByEscuelaID(@PathVariable("id_escuela") Long id_escuela, Pageable pageable){
-        Optional<EscuelaMagiaEntity> foundEntity = escuelaMagiaService.findById(id_escuela);
+        if(escuelaMagiaService.isExist(id_escuela))
+        {
+            // Obtén los hechizos paginados directamente desde la base de datos
+            Page<HechizoDTO> hechizoPage = hechizoService.findHechizosByEscuelaId(id_escuela, pageable);
+            // Convierte a PagedModel
+            PagedModel<EntityModel<HechizoDTO>> pagedModel = pagedResourcesAssemblerHechizos.toModel(hechizoPage);
 
-        if (foundEntity.isPresent()){
-
-            EscuelaMagiaEntity escuelaEncontrada = foundEntity.get();
-            if(escuelaEncontrada.getEstaBorrado() != null &&!escuelaEncontrada.getEstaBorrado() )
-            {
-                // Obtén los hechizos paginados directamente desde la base de datos
-                Page<HechizoEntity> hechizoPage = hechizoService.findHechizosByEscuelaId(id_escuela, pageable);
-
-                // Mapea los hechizos a DTO
-                Page<HechizoDTO> hechizoDTOPage = hechizoPage.map(hechizoMapper::mapTo);
-
-                // Convierte a PagedModel
-                PagedModel<EntityModel<HechizoDTO>> pagedModel = pagedResourcesAssemblerHechizos.toModel(hechizoDTOPage);
-
-                return new ResponseEntity<>(pagedModel,HttpStatus.OK);
-            }
+            return new ResponseEntity<>(pagedModel,HttpStatus.OK);
         }
         throw new EscuelaMagiaNotFoundException(id_escuela);
     }
 
     @PostMapping
     public ResponseEntity<EscuelaMagiaDTO> postEscuelaMagia(@RequestBody @Valid EscuelaMagiaDTO escuela) {
-
-        EscuelaMagiaEntity aGuardar = escuelaMagiaMapper.mapFrom(escuela);
-        EscuelaMagiaEntity savedEntity = escuelaMagiaService.save(aGuardar);
-
-        //Lanza excepcion IllegalArgumentExcepcion source cannot be null el mapTo.
-        return new ResponseEntity<>(escuelaMagiaMapper.mapTo(savedEntity),HttpStatus.CREATED);
+        EscuelaMagiaDTO saved = escuelaMagiaService.save(escuela);
+        return new ResponseEntity<>(saved,HttpStatus.CREATED);
     }
 
     @PutMapping("/{id_escuela}")
@@ -127,39 +95,27 @@ public class EscuelaMagiaController {
     }
 
     escuela.setId_escuela(id_escuela);
-    EscuelaMagiaEntity aActualizar = escuelaMagiaMapper.mapFrom(escuela);
-    escuelaMagiaService.save(aActualizar);
-    return new ResponseEntity<>(escuelaMagiaMapper.mapTo(aActualizar),HttpStatus.OK);
+    EscuelaMagiaDTO updated = escuelaMagiaService.save(escuela);
+    return new ResponseEntity<>(updated,HttpStatus.OK);
     }
 
     @PatchMapping("/{id_escuela}")
     public ResponseEntity<EscuelaMagiaDTO> patchEscuelaMagia(@PathVariable("id_escuela") Long id_escuela,
-                                                             @RequestBody @Valid EscuelaMagiaDTO escuela) {
+                                                             @RequestBody EscuelaMagiaDTO escuela) {
 
         if (!escuelaMagiaService.isExist(id_escuela)) {
             throw new EscuelaMagiaNotFoundException(id_escuela);
         }
-        EscuelaMagiaEntity escuelaMagiaEntity = escuelaMagiaMapper.mapFrom(escuela);
-        EscuelaMagiaEntity escuelaMagiaActualizada = escuelaMagiaService.update(id_escuela,escuelaMagiaEntity);
 
-        return new ResponseEntity<>(escuelaMagiaMapper.mapTo(escuelaMagiaActualizada),HttpStatus.OK);
+        EscuelaMagiaDTO updated = escuelaMagiaService.update(id_escuela,escuela);
+
+        return new ResponseEntity<>(updated,HttpStatus.OK);
     }
 
     @DeleteMapping("/{id_escuela}")
     public ResponseEntity<Void> deleteEscuelaMagia(@PathVariable("id_escuela") Long id_escuela) {
-        if (escuelaMagiaService.isExist(id_escuela)) {
 
-            Optional<EscuelaMagiaEntity> escuelaOptional = escuelaMagiaService.findById(id_escuela);
-
-            if (escuelaOptional.isPresent()){
-                EscuelaMagiaEntity escuelaMagiaEntity = escuelaOptional.get();
-                escuelaMagiaEntity.setEstaBorrado(true);
-                escuelaMagiaService.save(escuelaMagiaEntity);
-
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            }
-        }
-
-        throw new EscuelaMagiaNotFoundException(id_escuela);
+        escuelaMagiaService.delete(id_escuela);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

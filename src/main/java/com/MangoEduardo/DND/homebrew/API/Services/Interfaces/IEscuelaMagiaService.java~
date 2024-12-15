@@ -12,7 +12,7 @@ public interface IEscuelaMagiaService {
 
     Page<EscuelaMagiaDTO> findAll(Pageable pageable);
 
-    EscuelaMagiaDTO findById(Long id);
+    Optional<EscuelaMagiaDTO> findById(Long id);
 
     EscuelaMagiaDTO save(EscuelaMagiaDTO escuelaMagiaDTO);
 

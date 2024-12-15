@@ -1,7 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Config;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EscuelaMagiaDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EscuelaMagiaEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.Converters.HechizoListConverter;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

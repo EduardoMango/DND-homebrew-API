@@ -1,21 +1,19 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Interfaces;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EspecieEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.SubEspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EspecieDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.SubEspecieDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Optional;
-
 public interface ISubEspecieService {
 
-    Page<SubEspecieEntity> findAll(Pageable pageable);
-    Page<SubEspecieEntity> findByEspecie(EspecieEntity especie, Pageable pageable);
-    Optional<SubEspecieEntity> findById(Long id);
+    Page<SubEspecieDTO> findAll(Pageable pageable);
+    Page<SubEspecieDTO> findByEspecie(EspecieDTO especie, Pageable pageable);
+    SubEspecieDTO findById(Long id);
 
-    SubEspecieEntity save(SubEspecieEntity subEspecieEntity);
+    SubEspecieDTO save(EspecieDTO especie,SubEspecieDTO subEspecieDTO);
     boolean isExist(Long id);
-    SubEspecieEntity update(Long id, SubEspecieEntity subEspecieEntity);
+    SubEspecieDTO update(Long id, SubEspecieDTO subEspecieDTO);
     void delete(Long id);
 
 }

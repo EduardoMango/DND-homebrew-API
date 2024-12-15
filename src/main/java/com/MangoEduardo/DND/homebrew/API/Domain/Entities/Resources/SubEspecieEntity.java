@@ -1,4 +1,4 @@
-package com.MangoEduardo.DND.homebrew.API.Domain.Entities;
+package com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources;
 
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Models.RasgoModel;
@@ -28,7 +28,8 @@ public class SubEspecieEntity implements Serializable {
     @Lob
     private String descripcionSubespecie;
 
-    private Boolean estaBorrado;
+
+    private boolean estaBorrado;
 
     @ElementCollection
     @CollectionTable(

@@ -1,8 +1,8 @@
 package com.MangoEduardo.DND.homebrew.API.Mappers.Converters;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaSinHechizosDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EscuelaMagiaSinHechizosDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.HechizoDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.HechizoEntity;
 import org.modelmapper.spi.ConditionalConverter;
 import org.modelmapper.spi.MappingContext;
 

@@ -1,7 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Mappers.Impl;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EspecieDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EspecieDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EspecieEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

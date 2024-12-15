@@ -1,8 +1,8 @@
 package com.MangoEduardo.DND.homebrew.API.Mappers.Impl;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.EscuelaMagiaDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.DTO.HechizoDTO;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EscuelaMagiaEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EscuelaMagiaDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.HechizoDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EscuelaMagiaEntity;
 import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;

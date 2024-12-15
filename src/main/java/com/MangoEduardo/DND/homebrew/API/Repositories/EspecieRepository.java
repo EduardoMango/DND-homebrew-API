@@ -1,6 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Repositories;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EspecieEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

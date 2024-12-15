@@ -1,43 +1,70 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Implementations;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EspecieEntity;
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.SubEspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EspecieDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.SubEspecieDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.SubEspecieEntity;
 import com.MangoEduardo.DND.homebrew.API.Exceptions.EspecieNotFoundException;
+import com.MangoEduardo.DND.homebrew.API.Exceptions.SubEspecieNotFoundException;
+import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
 import com.MangoEduardo.DND.homebrew.API.Repositories.SubEspecieRepository;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.ISubEspecieService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class SubEspecieServiceImpl implements ISubEspecieService {
 
     private final SubEspecieRepository subEspecieRepository;
+    private final IMapper<SubEspecieEntity, SubEspecieDTO> subEspecieMapper;
+    private final IMapper<EspecieEntity, EspecieDTO> especieMapper;
 
-    public SubEspecieServiceImpl(SubEspecieRepository subEspecieRepository) {
+    public SubEspecieServiceImpl(SubEspecieRepository subEspecieRepository, IMapper<SubEspecieEntity, SubEspecieDTO> subEspecieMapper, IMapper<EspecieEntity, EspecieDTO> especieMapper) {
         this.subEspecieRepository = subEspecieRepository;
+        this.subEspecieMapper = subEspecieMapper;
+        this.especieMapper = especieMapper;
     }
 
     @Override
-    public Page<SubEspecieEntity> findAll(Pageable pageable) {
-        return subEspecieRepository.findAll(pageable);
+    public Page<SubEspecieDTO> findAll(Pageable pageable) {
+        Page<SubEspecieEntity> subEspecieEntities = subEspecieRepository.findAll(pageable);
+
+
+        List<SubEspecieDTO> nonDeletedEntities = subEspecieEntities.getContent().stream()
+                .filter(subEspecieEntity -> !Boolean.TRUE.equals(subEspecieEntity.isEstaBorrado()))
+                .map(subEspecieMapper::mapTo)
+                .toList();
+        return new PageImpl<>(nonDeletedEntities, pageable, subEspecieEntities.getTotalElements());}
+
+    @Override
+    public Page<SubEspecieDTO> findByEspecie(EspecieDTO especie, Pageable pageable) {
+        return subEspecieRepository.findByEspecie(especieMapper.mapFrom(especie), pageable).map(subEspecieMapper::mapTo);
     }
 
     @Override
-    public Page<SubEspecieEntity> findByEspecie(EspecieEntity especie, Pageable pageable) {
-        return subEspecieRepository.findByEspecie(especie, pageable);
+    public SubEspecieDTO findById(Long id) {
+        Optional<SubEspecieEntity> found = subEspecieRepository.findById(id);
+
+        if(found.isPresent() && !Boolean.TRUE.equals(found.get().isEstaBorrado())) {
+            return subEspecieMapper.mapTo(found.get());
+        }
+            throw new SubEspecieNotFoundException(id);
+
     }
 
     @Override
-    public Optional<SubEspecieEntity> findById(Long id) {
-        return subEspecieRepository.findById(id);
-    }
+    public SubEspecieDTO save(EspecieDTO especie, SubEspecieDTO subEspecieDTO) {
 
-    @Override
-    public SubEspecieEntity save(SubEspecieEntity subEspecieEntity) {
-        return subEspecieRepository.save(subEspecieEntity);
+        SubEspecieEntity toSave = subEspecieMapper.mapFrom(subEspecieDTO);
+        toSave.setEspecie(especieMapper.mapFrom(especie));
+        SubEspecieEntity saved = subEspecieRepository.save(toSave);
+
+        return subEspecieMapper.mapTo(saved);
     }
 
     @Override
@@ -46,29 +73,38 @@ public class SubEspecieServiceImpl implements ISubEspecieService {
     }
 
     @Override
-    public SubEspecieEntity update(Long id, SubEspecieEntity subEspecieEntity) {
-        subEspecieEntity.setIdSubespecie(id);
-        return subEspecieRepository
+    public SubEspecieDTO update(Long id, SubEspecieDTO subEspecieDTO) {
+        subEspecieDTO.setIdSubespecie(id);
+        SubEspecieEntity updated = subEspecieRepository
                 .findById(id)
                 .map(
                         subEspecieExistente -> {
                             // Actualiza solo los campos que no son nulos
-                            if (subEspecieEntity.getNombreSubespecie() != null) {
-                                subEspecieExistente.setNombreSubespecie(subEspecieEntity.getNombreSubespecie());
+                            if (subEspecieDTO.getNombreSubespecie() != null) {
+                                subEspecieExistente.setNombreSubespecie(subEspecieDTO.getNombreSubespecie());
                             }
-                            if (subEspecieEntity.getDescripcionSubespecie() != null) {
-                                subEspecieExistente.setDescripcionSubespecie(subEspecieEntity.getDescripcionSubespecie());
+                            if (subEspecieDTO.getDescripcionSubespecie() != null) {
+                                subEspecieExistente.setDescripcionSubespecie(subEspecieDTO.getDescripcionSubespecie());
                             }
-                            if (subEspecieEntity.getRasgos() != null) {
-                                subEspecieExistente.setRasgos(subEspecieEntity.getRasgos());
+                            if (subEspecieDTO.getRasgos() != null) {
+                                subEspecieExistente.setRasgos(subEspecieDTO.getRasgos());
                             }
                             return subEspecieRepository.save(subEspecieExistente);
                         })
                 .orElseThrow(() -> new EspecieNotFoundException(id));
+
+        return subEspecieMapper.mapTo(updated);
     }
 
     @Override
     public void delete(Long id) {
-        subEspecieRepository.deleteById(id);
+        Optional<SubEspecieEntity> subEspecieEntity = subEspecieRepository.findById(id);
+        if (subEspecieEntity.isPresent()) {
+            SubEspecieEntity toBeDeleted = subEspecieEntity.get();
+            toBeDeleted.setEstaBorrado(true);
+            subEspecieRepository.save(toBeDeleted);
+        } else {
+            throw new SubEspecieNotFoundException(id);
+        }
     }
 }

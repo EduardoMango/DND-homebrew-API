@@ -1,42 +1,69 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Implementations;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.HechizoDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EscuelaMagiaEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Domain.Enums.DamageTypes;
+import com.MangoEduardo.DND.homebrew.API.Exceptions.HechizoNotFoundException;
+import com.MangoEduardo.DND.homebrew.API.Mappers.IMapper;
+import com.MangoEduardo.DND.homebrew.API.Repositories.EscuelaMagiaRepository;
 import com.MangoEduardo.DND.homebrew.API.Repositories.HechizoRepository;
 import com.MangoEduardo.DND.homebrew.API.Services.Interfaces.IHechizoService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class HechizoServiceImpl implements IHechizoService {
 
     private final HechizoRepository hechizoRepository;
+    private final EscuelaMagiaRepository escuelaMagiaRepository;
+    private final IMapper<HechizoEntity, HechizoDTO> hechizoMapper;
 
-    HechizoServiceImpl(HechizoRepository hechizoRepository){
+    HechizoServiceImpl(HechizoRepository hechizoRepository, EscuelaMagiaRepository escuelaMagiaRepository, IMapper<HechizoEntity, HechizoDTO> hechizoMapper){
         this.hechizoRepository = hechizoRepository;
+        this.escuelaMagiaRepository = escuelaMagiaRepository;
+        this.hechizoMapper = hechizoMapper;
     }
 
     @Override
-    public Page<HechizoEntity> findAll(Pageable pageable) {
-        return hechizoRepository.findAll(pageable);
+    public Page<HechizoDTO> findAll(Pageable pageable) {
+        Page<HechizoEntity> hechizoEntities = hechizoRepository.findAll(pageable);
+        List<HechizoDTO> nonDeletedEntities = hechizoEntities.getContent().stream()
+                .filter(hechizo -> !Boolean.TRUE.equals(hechizo.getEstaBorrado()))
+                .map(hechizoMapper::mapTo)
+                .toList();
+
+    return new PageImpl<>(nonDeletedEntities,pageable,hechizoEntities.getTotalElements());
     }
 
     @Override
-    public Optional<HechizoEntity> findById(Long id) {
-        return hechizoRepository.findById(id);
+    public HechizoDTO findById(Long id) {
+        Optional<HechizoEntity> hechizo = hechizoRepository.findById(id);
+
+        //Boolean.True.Equals(hechizo.get().getEstaBorrado()) es una forma null safe de verificar si es true
+        if (hechizo.isPresent() && !Boolean.TRUE.equals(hechizo.get().getEstaBorrado())) {
+            return hechizoMapper.mapTo(hechizo.get());
+        }
+        throw new HechizoNotFoundException(id);
     }
 
-    public Page<HechizoEntity> findByNombreHechizo(String nombre_hechizo, Pageable pageable) {
-        return hechizoRepository.findByNombreHechizoContainingIgnoreCase(nombre_hechizo, pageable);
+    public Page<HechizoDTO> findByNombreHechizo(String nombre_hechizo, Pageable pageable) {
+        return hechizoRepository
+                .findByNombreHechizoContainingIgnoreCase(nombre_hechizo, pageable)
+                .map(hechizoMapper::mapTo);
     }
 
     @Override
-    public HechizoEntity save(HechizoEntity hechizoEntity) {
-        return hechizoRepository.save(hechizoEntity);
+    public HechizoDTO save(HechizoDTO hechizoDTO) {
+        HechizoEntity saved = hechizoRepository
+                .save(hechizoMapper.mapFrom(hechizoDTO));
+
+        return hechizoMapper.mapTo(saved);
     }
 
     @Override
@@ -45,107 +72,111 @@ public class HechizoServiceImpl implements IHechizoService {
     }
 
     @Override
-    public HechizoEntity update(Long id, HechizoEntity hechizoEntity) {
+    public HechizoDTO update(Long id, HechizoDTO hechizoDTO) {
 
-        hechizoEntity.setId_hechizo(id);
+        hechizoDTO.setId_hechizo(id);
 
-        return hechizoRepository.findById(id).map(hechizoExistente -> {
+        HechizoEntity updated = hechizoRepository.findById(id).map(hechizoExistente -> {
             // Actualiza solo los campos que no son nulos
-            if (hechizoEntity.getId_hechizo() != null) {
-                hechizoExistente.setId_hechizo(hechizoEntity.getId_hechizo());
+            if (hechizoDTO.getId_hechizo() != null) {
+                hechizoExistente.setId_hechizo(hechizoDTO.getId_hechizo());
             }
-            if (hechizoEntity.getNombreHechizo() != null) {
-                hechizoExistente.setNombreHechizo(hechizoEntity.getNombreHechizo());
+            if (hechizoDTO.getNombreHechizo() != null) {
+                hechizoExistente.setNombreHechizo(hechizoDTO.getNombreHechizo());
             }
-            if (hechizoEntity.getNivelHechizo() != null) {
-                hechizoExistente.setNivelHechizo(hechizoEntity.getNivelHechizo());
+            if (hechizoDTO.getNivelHechizo() != null) {
+                hechizoExistente.setNivelHechizo(hechizoDTO.getNivelHechizo());
             }
-            if (hechizoEntity.getDescripcion_hechizo() != null) {
-                hechizoExistente.setDescripcion_hechizo(hechizoEntity.getDescripcion_hechizo());
+            if (hechizoDTO.getDescripcion_hechizo() != null) {
+                hechizoExistente.setDescripcion_hechizo(hechizoDTO.getDescripcion_hechizo());
             }
-            if (hechizoEntity.getNiveles_mayores() != null) {
-                hechizoExistente.setNiveles_mayores(hechizoEntity.getNiveles_mayores());
+            if (hechizoDTO.getNiveles_mayores() != null) {
+                hechizoExistente.setNiveles_mayores(hechizoDTO.getNiveles_mayores());
             }
-            if (hechizoEntity.getTiempo_casteo() != null) {
-                hechizoExistente.setTiempo_casteo(hechizoEntity.getTiempo_casteo());
+            if (hechizoDTO.getTiempo_casteo() != null) {
+                hechizoExistente.setTiempo_casteo(hechizoDTO.getTiempo_casteo());
             }
-            if (hechizoEntity.getDuracion_Hechizo() != null) {
-                hechizoExistente.setDuracion_Hechizo(hechizoEntity.getDuracion_Hechizo());
+            if (hechizoDTO.getDuracion_Hechizo() != null) {
+                hechizoExistente.setDuracion_Hechizo(hechizoDTO.getDuracion_Hechizo());
             }
-            if (hechizoEntity.getRango_texto() != null) {
-                hechizoExistente.setRango_texto(hechizoEntity.getRango_texto());
+            if (hechizoDTO.getRango_texto() != null) {
+                hechizoExistente.setRango_texto(hechizoDTO.getRango_texto());
             }
-            if (hechizoEntity.getRango() != null) {
-                hechizoExistente.setRango(hechizoEntity.getRango());
+            if (hechizoDTO.getRango() != null) {
+                hechizoExistente.setRango(hechizoDTO.getRango());
             }
-            if (hechizoEntity.getArea() != null) {
-                hechizoExistente.setArea(hechizoEntity.getArea());
+            if (hechizoDTO.getArea() != null) {
+                hechizoExistente.setArea(hechizoDTO.getArea());
             }
-            if (hechizoEntity.getTipo_objetivo() != null) {
-                hechizoExistente.setTipo_objetivo(hechizoEntity.getTipo_objetivo());
+            if (hechizoDTO.getTipo_objetivo() != null) {
+                hechizoExistente.setTipo_objetivo(hechizoDTO.getTipo_objetivo());
             }
-            if (hechizoEntity.isVerbal()) {
-                hechizoExistente.setVerbal(hechizoEntity.isVerbal());
+            if (hechizoDTO.getMaterial_requerido() != null) {
+                hechizoExistente.setMaterial_requerido(hechizoDTO.getMaterial_requerido());
             }
-            if (hechizoEntity.isSomantico()) {
-                hechizoExistente.setSomantico(hechizoEntity.isSomantico());
+            if (hechizoDTO.getMaterial_costo() != null) {
+                hechizoExistente.setMaterial_costo(hechizoDTO.getMaterial_costo());
             }
-            if (hechizoEntity.isMaterial()) {
-                hechizoExistente.setMaterial(hechizoEntity.isMaterial());
+            if (hechizoDTO.getHabilidad_tirada_salvacion() != null) {
+                hechizoExistente.setHabilidad_tirada_salvacion(hechizoDTO.getHabilidad_tirada_salvacion());
             }
-            if (hechizoEntity.getMaterial_requerido() != null) {
-                hechizoExistente.setMaterial_requerido(hechizoEntity.getMaterial_requerido());
+            if (hechizoDTO.getDanio() != null) {
+                hechizoExistente.setDanio(hechizoDTO.getDanio());
             }
-            if (hechizoEntity.getMaterial_costo() != null) {
-                hechizoExistente.setMaterial_costo(hechizoEntity.getMaterial_costo());
+            if (hechizoDTO.getDamageTypes() != null) {
+                hechizoExistente.setDamageTypes(hechizoDTO.getDamageTypes());
             }
-            if (hechizoEntity.isConcentracion()) {
-                hechizoExistente.setConcentracion(hechizoEntity.isConcentracion());
-            }
-            if (hechizoEntity.isTiradaSalvacion()) {
-                hechizoExistente.setTiradaSalvacion(hechizoEntity.isTiradaSalvacion());
-            }
-            if (hechizoEntity.getHabilidad_tirada_salvacion() != null) {
-                hechizoExistente.setHabilidad_tirada_salvacion(hechizoEntity.getHabilidad_tirada_salvacion());
-            }
-            if (hechizoEntity.isEsAtaque()) {
-                hechizoExistente.setEsAtaque(hechizoEntity.isEsAtaque());
-            }
-            if (hechizoEntity.getDanio() != null) {
-                hechizoExistente.setDanio(hechizoEntity.getDanio());
-            }
-            if (hechizoEntity.getDamageTypes() != null) {
-                hechizoExistente.setDamageTypes(hechizoEntity.getDamageTypes());
-            }
-            if (hechizoEntity.getEsRitual() != null) {
-                hechizoExistente.setEsRitual(hechizoEntity.getEsRitual());
-            }
-            // Aquí puedes agregar el manejo para la escuela de magia si es necesario
-            if (hechizoEntity.getEscuelaMagia() != null) {
-                hechizoExistente.setEscuelaMagia(hechizoEntity.getEscuelaMagia());
+
+            //Sets all boolean values
+            hechizoExistente.setEsRitual(hechizoDTO.isEsRitual());
+            hechizoExistente.setEsAtaque(hechizoDTO.isEsAtaque());
+            hechizoExistente.setVerbal(hechizoDTO.isVerbal());
+            hechizoExistente.setSomantico(hechizoDTO.isSomantico());
+            hechizoExistente.setMaterial(hechizoDTO.isMaterial());
+            hechizoExistente.setConcentracion(hechizoDTO.isConcentracion());
+            hechizoExistente.setTiradaSalvacion(hechizoDTO.isTiradaSalvacion());
+
+            // Sets the EscuelaMagia
+            if (hechizoDTO.getEscuelaMagia() != null) {
+                Optional <EscuelaMagiaEntity> escuela = escuelaMagiaRepository.findById(hechizoDTO.getEscuelaMagia().getId_escuela());
+                escuela.ifPresent(hechizoExistente::setEscuelaMagia);
+
             }
             return hechizoRepository.save(hechizoExistente);
-        }).orElseThrow(() -> new EntityNotFoundException("La escuela ingresada no existe"));
+        }).orElseThrow(() -> new HechizoNotFoundException(id));
 
+    return hechizoMapper.mapTo(updated);
     }
 
     @Override
     public void delete(Long id) {
-        hechizoRepository.deleteById(id);
+        Optional<HechizoEntity> hechizo = hechizoRepository.findById(id);
+        if (hechizo.isPresent()){
+            HechizoEntity entity = hechizo.get();
+            entity.setEstaBorrado(true);
+            hechizoRepository.save(entity);
+        }
+        throw new HechizoNotFoundException(id);
     }
 
     @Override
-    public Page<HechizoEntity> findHechizosByEscuelaId(Long idEscuela, Pageable pageable) {
-        return hechizoRepository.findHechizosByEscuelaId(idEscuela, pageable);
+    public Page<HechizoDTO> findHechizosByEscuelaId(Long idEscuela, Pageable pageable) {
+        return hechizoRepository
+                .findHechizosByEscuelaId(idEscuela, pageable)
+                .map(hechizoMapper::mapTo);
     }
 
     @Override
-    public Page<HechizoEntity> findByNivelHechizo(Integer nivelHechizo, Pageable pageable) {
-        return hechizoRepository.findByNivelHechizo(nivelHechizo, pageable);
+    public Page<HechizoDTO> findByNivelHechizo(Integer nivelHechizo, Pageable pageable) {
+        return hechizoRepository
+                .findByNivelHechizo(nivelHechizo, pageable)
+                .map(hechizoMapper::mapTo);
     }
 
     @Override
-    public Page<HechizoEntity> findByDamageTypes(DamageTypes damageTypes, Pageable pageable) {
-        return hechizoRepository.findByDamageTypesContaining(damageTypes, pageable);
+    public Page<HechizoDTO> findByDamageTypes(DamageTypes damageTypes, Pageable pageable) {
+        return hechizoRepository
+                .findByDamageTypesContaining(damageTypes, pageable)
+                .map(hechizoMapper::mapTo);
     }
 }

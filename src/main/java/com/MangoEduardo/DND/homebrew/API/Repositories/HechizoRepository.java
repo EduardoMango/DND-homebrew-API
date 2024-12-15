@@ -1,6 +1,6 @@
 package com.MangoEduardo.DND.homebrew.API.Repositories;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.HechizoEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.HechizoEntity;
 import com.MangoEduardo.DND.homebrew.API.Domain.Enums.DamageTypes;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

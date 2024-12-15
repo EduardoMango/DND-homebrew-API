@@ -1,4 +1,4 @@
-package com.MangoEduardo.DND.homebrew.API.Domain.DTO;
+package com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources;
 
 import com.MangoEduardo.DND.homebrew.API.Domain.Models.RasgoModel;
 import jakarta.validation.constraints.NotBlank;

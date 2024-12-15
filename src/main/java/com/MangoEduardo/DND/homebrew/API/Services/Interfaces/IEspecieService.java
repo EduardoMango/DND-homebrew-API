@@ -1,6 +1,7 @@
 package com.MangoEduardo.DND.homebrew.API.Services.Interfaces;
 
-import com.MangoEduardo.DND.homebrew.API.Domain.Entities.EspecieEntity;
+import com.MangoEduardo.DND.homebrew.API.Domain.DTO.Resources.EspecieDTO;
+import com.MangoEduardo.DND.homebrew.API.Domain.Entities.Resources.EspecieEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -8,11 +9,11 @@ import java.util.Optional;
 
 public interface IEspecieService {
 
-    Page<EspecieEntity> findAll(Pageable pageable);
-    Optional<EspecieEntity> findById(Long id);
-    EspecieEntity save(EspecieEntity especieEntity);
+    Page<EspecieDTO> findAll(Pageable pageable);
+    EspecieDTO findById(Long id);
+    EspecieDTO save(EspecieDTO especieDTO);
     boolean isExist(Long id);
-    EspecieEntity update(Long id, EspecieEntity especieEntity);
+    EspecieDTO update(Long id, EspecieDTO especieDTO);
     void delete(Long id);
 
 
